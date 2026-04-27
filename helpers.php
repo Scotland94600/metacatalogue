@@ -99,18 +99,18 @@ if (!function_exists('page_nav')) {
   function page_nav(array $user): void {
     echo '<nav class="card">';
     echo '<a href="index.php">Accueil</a>';
-    echo '<a href="suppliers.php">Fournisseurs</a>';
-    echo '<a href="products_import.php">Produits Dolibarr</a>';
-    echo '<a href="import_upload.php">Importer tarifs</a>';
-    echo '<a href="best_prices.php">Meilleurs prix</a>';
-    echo '<a href="catalogue.php">Catalogue</a>';
-    echo '<a href="export_dolibarr.php">Export CSV</a>';
+    echo '<a href="modules/suppliers.php">Fournisseurs</a>';
+    echo '<a href="modules/products_import.php">Produits Dolibarr</a>';
+    echo '<a href="modules/import_upload.php">Importer tarifs</a>';
+    echo '<a href="modules/best_prices.php">Meilleurs prix</a>';
+    echo '<a href="modules/catalogue.php">Catalogue</a>';
+    echo '<a href="modules/export_dolibarr.php">Export CSV</a>';
     echo '<span style="float:right">';
     echo '<a href="account.php">'.h($user['email'] ?? 'Compte').'</a> | ';
     if (($user['role'] ?? '') === 'admin') {
-      echo '<a href="admin_users.php">Utilisateurs</a> | ';
-      echo '<a href="admin_universes.php">Univers</a> | ';
-      echo '<a href="admin_categories.php">Catégories</a> | ';
+      echo '<a href="admin/admin_users.php">Utilisateurs</a> | ';
+      echo '<a href="admin/admin_universes.php">Univers</a> | ';
+      echo '<a href="admin/admin_categories.php">Catégories</a> | ';
     }
     echo '<a href="logout.php">Déconnexion</a>';
     echo '</span>';
