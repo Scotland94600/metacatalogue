@@ -2,18 +2,26 @@
 
 ## Release
 
-- Version actuelle: **v1.0.1** (27 avril 2026)
+- Version actuelle: **v1.1.0** (27 avril 2026)
 - Notes de version: `CHANGELOG.md`
 - Architecture: `ARCHITECTURE.md`
 
 ## Installation rapide
 
 1. Déployer le code sur ton serveur PHP (8.1+ recommandé) avec MySQL/MariaDB.
-2. Ouvrir `install.php` dans le navigateur.
+2. Ouvrir `install/install.php` dans le navigateur (ou `install.php` pour rétrocompatibilité).
 3. Remplir les accès DB + créer le compte admin.
 4. Se connecter via `login.php`.
 5. (Recommandé) supprimer ou protéger `install.php` après installation.
 6. Si `config.local.php` existe déjà, `install.php` se bloque (utiliser `?force=1` uniquement pour une réinstallation volontaire).
+
+## Arborescence (v1.1)
+
+- `/admin` : écrans d'administration.
+- `/modules` : modules métier (catalogue, import, export, prix).
+- `/install` : scripts d'installation.
+- `/img` : assets image.
+- `/` : points d'entrée historiques et wrappers de compatibilité.
 
 ## Configuration base de données
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.0 — 2026-04-27
+
+### Changed
+- Réorganisation de l'arborescence:
+  - `admin/*` pour les écrans admin,
+  - `modules/*` pour les modules métier,
+  - `install/install.php` pour l'installation,
+  - `img/` pour les images.
+- Ajout de wrappers à la racine pour conserver la rétrocompatibilité des anciennes URLs.
+
 ## v1.0.1 — 2026-04-27
 
 ### Fixed

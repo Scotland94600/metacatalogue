@@ -7,18 +7,20 @@ Application PHP procédurale orientée métier pour comparer des prix fournisseu
 ## Blocs principaux
 
 - **Auth & session**
-  - `auth.php`, `login.php`, `logout.php`, `account.php`, `admin_users.php`
+  - `auth.php`, `login.php`, `logout.php`, `account.php`
 - **Noyau UI & utilitaires**
   - `helpers.php` (layout, flash, helpers EAN/decimal)
 - **Base de données**
   - `db.php` (bootstrap PDO + config)
-  - `install.php` (bootstrap initial schéma + admin + config locale)
+  - `install/install.php` (bootstrap initial schéma + admin + config locale)
+- **Administration**
+  - `admin/admin_users.php`, `admin/admin_universes.php`, `admin/admin_categories.php`
 - **Référentiel métier**
-  - `suppliers.php`, `products_import.php`, `catalogue.php`, `product.php`, `product_edit.php`, `product_delete.php`
+  - `modules/suppliers.php`, `modules/products_import.php`, `modules/catalogue.php`, `modules/product.php`, `modules/product_edit.php`, `modules/product_delete.php`
 - **Import fournisseur**
-  - `import_upload.php` → `import_map.php` → `import_run.php`
+  - `modules/import_upload.php` → `modules/import_map.php` → `modules/import_run.php`
 - **Résultats / export**
-  - `best_prices.php`, `export_dolibarr.php`
+  - `modules/best_prices.php`, `modules/export_dolibarr.php`
 
 ## Flux fonctionnels
 
