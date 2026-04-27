@@ -2,7 +2,7 @@
 
 ## Release
 
-- Version actuelle: **v1.0.0** (27 avril 2026)
+- Version actuelle: **v1.0.1** (27 avril 2026)
 - Notes de version: `CHANGELOG.md`
 - Architecture: `ARCHITECTURE.md`
 
@@ -13,6 +13,7 @@
 3. Remplir les accès DB + créer le compte admin.
 4. Se connecter via `login.php`.
 5. (Recommandé) supprimer ou protéger `install.php` après installation.
+6. Si `config.local.php` existe déjà, `install.php` se bloque (utiliser `?force=1` uniquement pour une réinstallation volontaire).
 
 ## Configuration base de données
 

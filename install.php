@@ -4,6 +4,7 @@ declare(strict_types=1);
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
 function h(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+function is_valid_db_name(string $name): bool { return (bool)preg_match('/^[A-Za-z0-9_]+$/', $name); }
 
 $defaults = [
   'db_host' => 'localhost',
@@ -16,13 +17,29 @@ $defaults = [
 $data = $defaults;
 $errors = [];
 $ok = '';
+$isInstalled = is_file(__DIR__.'/config.local.php');
+
+if (!isset($_SESSION['install_csrf'])) {
+  $_SESSION['install_csrf'] = bin2hex(random_bytes(16));
+}
+$csrf = (string)$_SESSION['install_csrf'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if ($isInstalled && !isset($_GET['force'])) {
+    $errors[] = "Installation bloquée: l'application semble déjà configurée (config.local.php présent).";
+  }
+
+  $postedCsrf = (string)($_POST['csrf'] ?? '');
+  if (!hash_equals($csrf, $postedCsrf)) {
+    $errors[] = "Session invalide, recharge la page puis recommence.";
+  }
+
   foreach ($defaults as $k => $v) {
     $data[$k] = trim((string)($_POST[$k] ?? $v));
   }
 
   if ($data['db_name'] === '' || $data['db_user'] === '') $errors[] = "La configuration DB est incomplète.";
+  if (!is_valid_db_name($data['db_name'])) $errors[] = "Nom de base invalide (lettres/chiffres/underscore uniquement).";
   if ($data['admin_email'] === '' || $data['admin_password'] === '') $errors[] = "Compte admin requis.";
   if (!filter_var($data['admin_email'], FILTER_VALIDATE_EMAIL)) $errors[] = "Email admin invalide.";
   if (strlen($data['admin_password']) < 8) $errors[] = "Le mot de passe admin doit faire au moins 8 caractères.";
@@ -150,14 +167,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ."  'db_user' => ".var_export($data['db_user'], true).",\n"
         ."  'db_pass' => ".var_export($data['db_pass'], true).",\n"
         ."];\n";
-      file_put_contents(__DIR__.'/config.local.php', $config);
+      $written = file_put_contents(__DIR__.'/config.local.php', $config, LOCK_EX);
+      if ($written === false) {
+        throw new RuntimeException("Impossible d'écrire config.local.php (permissions).");
+      }
+      @chmod(__DIR__.'/config.local.php', 0640);
 
       $uploads = dirname(__DIR__).'/uploads';
       if (!is_dir($uploads)) @mkdir($uploads, 0775, true);
 
-      $ok = "Installation terminée. Connecte-toi via login.php avec {$data['admin_email']}.";
+      $ok = "Installation terminée. Connecte-toi via login.php avec {$data['admin_email']}. Pense à supprimer/protéger install.php.";
     } catch (Throwable $e) {
-      $errors[] = "Échec de l'installation: ".$e->getMessage();
+      error_log('[install.php] '.$e->getMessage());
+      $errors[] = "Échec de l'installation. Vérifie les accès DB et les permissions, puis réessaie.";
     }
   }
 }
@@ -183,6 +205,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <h2>MetaCatalogue — install.php</h2>
   <p class="muted">Ce script crée la base, les tables nécessaires, un compte admin et <code>config.local.php</code>.</p>
+  <?php if ($isInstalled && !isset($_GET['force'])): ?>
+    <div class="err">
+      Installation déjà effectuée: <code>config.local.php</code> existe déjà.<br>
+      Utilise <code>?force=1</code> uniquement si tu veux réinstaller.
+    </div>
+  <?php endif; ?>
 
   <?php if ($ok !== ''): ?>
     <div class="ok"><?=h($ok)?></div>
@@ -192,6 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php endforeach; ?>
 
   <form method="post" class="card">
+    <input type="hidden" name="csrf" value="<?=h($csrf)?>">
     <h3>Base de données</h3>
     <div class="grid">
       <div><label>Hôte DB</label><input name="db_host" value="<?=h($data['db_host'])?>" required></div>
