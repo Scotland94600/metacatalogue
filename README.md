@@ -1,8 +1,22 @@
 # metacatalogue
 
+## Release
+
+- Version actuelle: **v1.0.0** (27 avril 2026)
+- Notes de version: `CHANGELOG.md`
+- Architecture: `ARCHITECTURE.md`
+
+## Installation rapide
+
+1. Déployer le code sur ton serveur PHP (8.1+ recommandé) avec MySQL/MariaDB.
+2. Ouvrir `install.php` dans le navigateur.
+3. Remplir les accès DB + créer le compte admin.
+4. Se connecter via `login.php`.
+5. (Recommandé) supprimer ou protéger `install.php` après installation.
+
 ## Configuration base de données
 
-L'application lit d'abord les variables d'environnement suivantes, puis applique des valeurs par défaut si elles ne sont pas définies :
+L'application lit d'abord `config.local.php` (généré par `install.php`), puis les variables d'environnement suivantes, puis applique des valeurs par défaut :
 
 - `METACAT_DB_HOST` (défaut: `localhost`)
 - `METACAT_DB_NAME` (défaut: `metacat`)
